@@ -1,9 +1,18 @@
-srsRAN
+srsRAN 
 ======
 
 [![Build Status](https://travis-ci.com/srsran/srsRAN.svg?branch=master)](https://travis-ci.com/srsran/srsRAN)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/srsran/srsRAN.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/srsran/srsRAN/context:cpp)
 [![Coverity](https://scan.coverity.com/projects/23048/badge.svg)](https://scan.coverity.com/projects/srsran_agpl)
+
+srSRAN UE NTN Adaptation
+========================
++ Increase the RAR window size
++ Increase the Contention Resolution Timer
+
+Location:
+
+> ```srsue/src/stack/mac/proc_ra.cc```
 
 srsRAN is a 4G/5G software radio suite developed by [SRS](http://www.srs.io).
 
