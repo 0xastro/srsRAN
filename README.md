@@ -5,6 +5,12 @@ srsRAN
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/srsran/srsRAN.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/srsran/srsRAN/context:cpp)
 [![Coverity](https://scan.coverity.com/projects/23048/badge.svg)](https://scan.coverity.com/projects/srsran_agpl)
 
+Tested
+======
++ 0msec Delay: OAI eNB <-> srsUE 
++ ```>=``` 2msec Delay: N/A
+
+
 srSRAN UE NTN Adaptation
 ========================
 + Increase the RAR window size
