@@ -25,6 +25,8 @@
 #include <algorithm>
 #include <srsran/common/interfaces_common.h>
 
+#define CR_TIMER 520
+#define RAO_TIMER 520
 namespace srsran {
 
 using namespace asn1::rrc;
@@ -402,9 +404,8 @@ void set_mac_cfg_t_rach_cfg_common(mac_cfg_t* cfg, const asn1::rrc::rach_cfg_com
 
   // Supervision info
   cfg->rach_cfg.preambleTransMax          = asn1_type.ra_supervision_info.preamb_trans_max.to_number();
-  cfg->rach_cfg.responseWindowSize        = asn1_type.ra_supervision_info.ra_resp_win_size.to_number();
-  cfg->rach_cfg.contentionResolutionTimer = asn1_type.ra_supervision_info.mac_contention_resolution_timer.to_number();
-
+  cfg->rach_cfg.responseWindowSize        = CR_TIMER+asn1_type.ra_supervision_info.ra_resp_win_size.to_number(); //Astro
+  cfg->rach_cfg.contentionResolutionTimer = RAO_TIMER+asn1_type.ra_supervision_info.mac_contention_resolution_timer.to_number();
   // HARQ Msg3
   cfg->harq_cfg.max_harq_msg3_tx = asn1_type.max_harq_msg3_tx;
 }
@@ -686,7 +687,8 @@ void set_phy_cfg_t_dedicated_cfg(phy_cfg_t* cfg, const asn1::rrc::phys_cfg_ded_s
 void set_phy_cfg_t_common_prach(phy_cfg_t* cfg, const asn1::rrc::prach_cfg_info_s* asn1_type, uint32_t root_seq_idx)
 {
   if (asn1_type) {
-    cfg->prach_cfg.config_idx     = asn1_type->prach_cfg_idx;
+    cfg->prach_cfg.config_idx     = asn1_type->prach_cfg_idx-3; //astro
+//    cfg->prach_cfg.config_idx     = 1;
     cfg->prach_cfg.zero_corr_zone = asn1_type->zero_correlation_zone_cfg;
     cfg->prach_cfg.freq_offset    = asn1_type->prach_freq_offset;
     cfg->prach_cfg.hs_flag        = asn1_type->high_speed_flag;

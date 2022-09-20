@@ -27,6 +27,8 @@
 #include <inttypes.h> // for printing uint64_t
 #include <stdint.h>
 #include <stdlib.h>
+#define CR_TIMER         520
+#define RAO_TIMER        520
 
 /* Random access procedure as specified in Section 5.1 of 36.321 */
 
@@ -70,7 +72,7 @@ void ra_proc::init(phy_interface_mac_lte*               phy_h_,
   time_alignment_timer        = time_alignment_timer_;
   contention_resolution_timer = task_sched->get_unique_timer();
 
-  srsran_softbuffer_rx_init(&softbuffer_rar, 10);
+  srsran_softbuffer_rx_init(&softbuffer_rar, 10); //astro
 
   reset();
 }
@@ -124,7 +126,11 @@ void ra_proc::read_params()
   delta_preamble_db                              = delta_preamble_db_table[prach_info.preamble_format % 5];
 
   if (rach_cfg.contentionResolutionTimer > 0) {
-    contention_resolution_timer.set(rach_cfg.contentionResolutionTimer, [this](uint32_t tid) { timer_expired(tid); });
+    contention_resolution_timer.set(rach_cfg.contentionResolutionTimer+CR_TIMER, [this](uint32_t tid) {timer_expired(tid); });
+    rInfo("=======================================================================");
+    rInfo("CR: Starting ContentionResolutionTimer=%d ms", rach_cfg.contentionResolutionTimer);
+    rInfo("=======================================================================");
+
   }
 }
 
@@ -176,8 +182,11 @@ void ra_proc::state_response_reception(uint32_t tti)
 {
   // do nothing. Processing done in tb_decoded_ok()
   if (!rar_received) {
-    uint32_t interval = srsran_tti_interval(tti, ra_tti + 3 + rach_cfg.responseWindowSize - 1);
-    if (interval > 0 && interval < 100) {
+    uint32_t interval = srsran_tti_interval(tti, ra_tti + 3 + rach_cfg.responseWindowSize+RAO_TIMER - 1); //astro
+    rInfo("=======================================================================");
+    rInfo("RAO_TIMER=%d, Interval = %d+100", rach_cfg.responseWindowSize, interval);
+    rInfo("=======================================================================");
+    if (interval > 0 && interval < 100+RAO_TIMER) { //was 100 
       logger.warning("RA response not received within the response window");
       response_error();
     }
@@ -604,7 +613,7 @@ void ra_proc::update_rar_window(int& rar_window_start, int& rar_window_length)
     rar_window_start  = -1;
     rar_window_length = -1;
   } else {
-    rar_window_length = rach_cfg.responseWindowSize;
+    rar_window_length = rach_cfg.responseWindowSize;//astro
     rar_window_start  = rar_window_st;
   }
   rDebug("rar_window_start=%d, rar_window_length=%d", rar_window_start, rar_window_length);
